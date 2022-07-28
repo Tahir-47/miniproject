@@ -21,6 +21,8 @@ def index(request):
 
     for users in user_following:
         user_following_list.append(users.user)
+    
+    user_following_list.append(user_object)
 
     for usernames in user_following_list:
         feed_lists = Post.objects.filter(user=usernames)
@@ -29,7 +31,16 @@ def index(request):
     feed_list = list(chain(*feed))
 
     # user suggestion starts
-    all_users = User.objects.all()
+    user_prof = Profile.objects.filter(isAdmin=True)
+    user_prof_list = []
+    all_users = []
+    for prof in user_prof:
+        user_prof_list.append(prof.id_user)
+
+    for ids in user_prof_list:
+        prof = User.objects.get(id=ids)
+        all_users.append(prof)
+
     user_following_all = []
 
     for user in user_following:
