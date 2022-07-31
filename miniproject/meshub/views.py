@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, auth
 from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
-from .models import Profile, Post, LikePost, FollowersCount
+from .models import Profile, Post, LikePost, FollowersCount, mesUsers
 from itertools import chain
 import random
 
@@ -208,13 +208,7 @@ def signup(request):
         password2 = request.POST['password2']
 
         if password == password2:
-            if User.objects.filter(email=email).exists():
-                messages.info(request, 'Email Taken')
-                return redirect('signup')
-            elif User.objects.filter(username=username).exists():
-                messages.info(request, 'Username Taken')
-                return redirect('signup')
-            else:
+            if mesUsers.objects.filter(email=email).exists() and mesUsers.objects.filter(id_No=username).exists():
                 user = User.objects.create_user(username=username, email=email, password=password)
                 user.save()
 
@@ -227,6 +221,10 @@ def signup(request):
                 new_profile = Profile.objects.create(user=user_model, id_user=user_model.id)
                 new_profile.save()
                 return redirect('settings')
+                
+            else:
+                messages.info(request, 'Invalid Credentials')
+                return redirect('signup')
         else:
             messages.info(request, 'Password Not Matching')
             return redirect('signup')

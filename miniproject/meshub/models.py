@@ -7,6 +7,15 @@ from datetime import datetime
 User = get_user_model()
 
 # Create your models here.
+class mesUsers(models.Model):
+    name = models.CharField(max_length=100)
+    id_No = models.CharField(max_length=100)
+    email = models.CharField(max_length=100)
+    branch = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 class Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     id_user = models.IntegerField()
